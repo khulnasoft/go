@@ -1,0 +1,32 @@
+name: Update Submodules
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the main repository and initialize submodules
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive # Ensure all submodules are initialized
+
+    # Update submodules to their latest commits
+    - name: Update submodules
+      run: |
+        git submodule update --remote --merge
+        git add .
+        git commit -m "Updated submodules to latest commits" || echo "No changes to commit"
+    
+    # Push updates to the repository
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
