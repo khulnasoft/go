@@ -1,6 +1,8 @@
-# Khulnasoft Rolling Go Fork
+  <a href="https://khulnsoft.com" alt="khulnsoft"><img width="189px" src="https://khulnsoft.com/assets/img/logo.svg"></a>
 
-This is [Khulnasoft's](https://github.com/khulnasoft/khulnasoft) rolling fork of Go with added automatic instrumentation.
+# Khulnsoft Rolling Go Fork
+
+This is [Khulnsoft's](https://github.com/khulnsoftdev/khulnsoft) rolling fork of Go with added automatic instrumentation.
 
 This branch contains the raw patches, which allow us to re-apply them ontop of new Go releases.
 
@@ -13,14 +15,14 @@ This system produces [reproducible builds](https://reproducible-builds.org/) of 
    (Note: instead of a Go version number, you can pass in `master` to build against the latest Go development commit)
 3. Run our build script using; `go run . --goos "darwin" --goarch "arm64"`
    (replacing the OS and arch parameters to match your requirement)
-4. Verify your go was build; `./dist/darwin_arm64/khulnasoft-go/bin/go version`
-    The output you see should look like this, looking for the `khulnasoft-go` string;
-   `go version khulnasoft-go1.17.6 khulnasoft-go1.17-4d15582aff Thu Jan 6 19:06:43 2022 +0000 darwin/arm64`
+4. Verify your go was build; `./dist/darwin_arm64/khulnsoft-go/bin/go version`
+    The output you see should look like this, looking for the `khulnsoft-go` string;
+   `go version khulnsoft-go1.17.6 khulnsoft-go1.17-4d15582aff Thu Jan 6 19:06:43 2022 +0000 darwin/arm64`
 
 ## Directory Structure
 
 This branch is broken up into three main folders;
-- `overlay`; this folder contains brand-new Khulnasoft specific files which should be copied into the `src` path of a fresh Go Release
+- `overlay`; this folder contains brand-new Khulnsoft specific files which should be copied into the `src` path of a fresh Go Release
 - `patches`; this folder contains patch files to modify the existing Go source code
 - `go`; a submodule checkout of https://go.googlesource.com/go which we apply the above two folders against 
 

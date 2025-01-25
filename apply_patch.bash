@@ -1,27 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE: This script creates a fresh version of a Khulnasoft patched Go runtime, however we are aiming to create
-#       reproducible builds, as such all copies and file writes are given fixed timestamps (rather than the system time
-#       when this script was run). This allows the Git commit at the end of the process to have a deterministic hash,
-#       thus when we build the Go binary it will produce an identical binary.
-
-die () {
-    echo >&2 "$@"
-    exit 1
-}
-
-_(){ eval "$@" 2>&1 | sed "s/^/    /" ; return "${PIPESTATUS[0]}" ;}
-
-[ "$#" -eq 1 ] || die "Usage: $0 [go release]"
-
-# Patches the Go runtime with Khulnasoft tracing code.
-
-# Examples:
-# ========
-# A Go release: $0 1.17
-# Nightly release: $0 master#!/usr/bin/env bash
-
-# NOTE: This script creates a fresh version of a Khulnasoft patched Go runtime, however we are aiming to create
+# NOTE: This script creates a fresh version of a Khulnsoft patched Go runtime, however we are aiming to create
 #       reproducible builds, as such all copies and file writes are given fixed timestamps (rather than the system time
 #       when thie script was run). This allows the Git commit at the end of the process to have a deterministic hash,
 #       thus when we build the Go binary it will produce an identical binary.
@@ -35,7 +14,7 @@ _(){ eval "$@" 2>&1 | sed "s/^/    /" ; return "${PIPESTATUS[0]}" ;}
 
 [ "$#" -eq 1 ] || die "Usage: $0 [go release]
 
-Patches the Go runtime with Khulnasoft tracing code.
+Patches the Go runtime with Khulnsoft tracing code.
 
 Examples:
 ========
@@ -65,7 +44,7 @@ echo
 LAST_COMMIT_TIME=$(git log -1 --format=%cd)
 
 # Copy our overlay in and then apply the patches
-echo "🏗️  Applying Khulnasoft changes to the Go runtime..."
+echo "🏗️  Applying Khulnsoft changes to the Go runtime..."
   _ git apply --ignore-space-change --ignore-whitespace --3way ../patches/*.diff
   _ cp -p -P -v -R ../overlay/* ./
 echo
@@ -74,12 +53,12 @@ echo "🤖  Committing runtime changes..."
   _ git add .
 
   # Note; we set all the details of the commit to git hash deterministic
-  GIT_COMMITTER_NAME='Khulnasoft Patcher' \
-  GIT_COMMITTER_EMAIL='noreply@khulnasoft.com' \
+  GIT_COMMITTER_NAME='Khulnsoft Patcher' \
+  GIT_COMMITTER_EMAIL='noreply@khulnsoft.com' \
   GIT_COMMITTER_DATE="$LAST_COMMIT_TIME" \
   git commit --allow-empty --date="$LAST_COMMIT_TIME" \
-      --author='Khulnasoft Patcher <noreply@khulnasoft.com>' \
-      -m 'Applied Khulnasoft.com instrumentation changes to the Go runtime' 2>&1 | sed "s/^/    /"
+      --author='Khulnsoft Patcher <noreply@khulnsoft.com>' \
+      -m 'Applied Khulnsoft.dev instrumentation changes to the Go runtime' 2>&1 | sed "s/^/    /"
 echo
 
 # Restore the working directory back

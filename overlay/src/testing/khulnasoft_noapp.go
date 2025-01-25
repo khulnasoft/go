@@ -1,28 +1,28 @@
-//go:build !khulnasoft
-// +build !khulnasoft
+//go:build !khulnsoft
+// +build !khulnsoft
 
 package testing
 
-// khulnasoftStartTest is called when a test starts running. This allows Khulnasoft's testing framework to
+// khulnsoftStartTest is called when a test starts running. This allows Khulnsoft's testing framework to
 // isolate behavior between different tests on global state.
 //
-// This implementation is simply a no-op as it's used when the tests are not being run against an Khulnasoft application
-func khulnasoftStartTest(t *T, fn func(t *T)) {}
+// This implementation is simply a no-op as it's used when the tests are not being run against an Khulnsoft application
+func khulnsoftStartTest(t *T, fn func(t *T)) {}
 
-// khulnasoftEndTest is called when a test ends. This allows Khulnasoft's testing framework to clear down any state from the test
-// and to perform any assertions on that state that it needs to. It is linked to the Khulnasoft runtime via go:linkname.
+// khulnsoftEndTest is called when a test ends. This allows Khulnsoft's testing framework to clear down any state from the test
+// and to perform any assertions on that state that it needs to. It is linked to the Khulnsoft runtime via go:linkname.
 //
-// This implementation is simply a no-op as it's used when the tests are not being run against an Khulnasoft application
-func khulnasoftEndTest(t *T) {}
+// This implementation is simply a no-op as it's used when the tests are not being run against an Khulnsoft application
+func khulnsoftEndTest(t *T) {}
 
-// khulnasoftPauseTest is called when a test is paused. This allows Khulnasoft's testing framework to
-// isolate behavior between different tests on global state.
-func khulnasoftPauseTest(t *T) {}
+// khulnsoftPauseTest is called when a test is paused. This allows Khulnsoft's testing framework to
+// isolate behavior between different tests on global state. It is linked to the Khulnsoft runtime via go:linkname.
+func khulnsoftPauseTest(t *T) {}
 
-// khulnasoftResumeTest is called when a test is resumed after being paused. This allows Khulnasoft's testing framework to clear down any state from the test
-// and to perform any assertions on that state that it needs to.
-func khulnasoftResumeTest(t *T) {}
+// khulnsoftResumeTest is called when a test is resumed after being paused. This allows Khulnsoft's testing framework to clear down any state from the test
+// and to perform any assertions on that state that it needs to. It is linked to the Khulnsoft runtime via go:linkname.
+func khulnsoftResumeTest(t *T) {}
 
-// khulnasoftTestLog is called when a test logs a line. This allows Khulnasoft's testing framework to capture the log output
+// khulnsoftTestLog is called when a test logs a line. This allows Khulnsoft's testing framework to capture the log output
 // and emit that log output to the test trace.
-func khulnasoftTestLog(line string, frameSkip int) {}
+func khulnsoftTestLog(line string, frameSkip int) {}

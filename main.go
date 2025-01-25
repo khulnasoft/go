@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"go.khulnasoft.com/go/builder"
+	"go.khulnsoft.com/go/builder"
 )
 
 func main() {
@@ -34,7 +34,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if err := builder.BuildKhulnasoftGo(*goos, *goarch, root, *dst); err != nil {
+	if err := builder.BuildKhulnsoftGo(*goos, *goarch, root, *dst); err != nil {
 		log.Fatalln(err)
 	}
 }
@@ -45,25 +45,29 @@ func readBuiltVersion() {
 		// If we're building from a release branch, we use this as the base
 		str = readfile("go/VERSION")
 		// Then we repeat the replace we do within the src/cmd/dist/build.go
-		str = strings.Replace(str, "go1.", "khulnasoft-go1.", 1)
-	} else if isfile("go/VERSION.cache") {
+		str = strings.Replace(str, "go1.", "khulnsoft-go1.", 1)
+	} else {
 		// Otherwise we read the cache file which would be created by the build process
 		// if there was no VERSION file present
 		str = readfile("go/VERSION.cache")
-	} else {
-		log.Fatalf("Neither VERSION nor VERSION.cache file found")
 	}
 
-	// With our patches there must always be an `khulnasoft-go1.xx` version in this string
+	// With our patches there must always be an `khulnsoft-go1.xx` version in this string
 	// (there may be other bits, like "devel" or "beta" which we don't care about)
-	re, err := regexp.Compile("(khulnasoft-go[^ ]+)")
+	re, err := regexp.Compile("(khulnsoft-go[^ ]+)")
 	if err != nil {
 		log.Fatalf("Unable to compile regex: %+v", err)
 	}
 	version := re.FindString(str)
 	if version == "" {
-		log.Fatalf("Unable to find version string in: %s", str)
+		log.Fatalf("Unable to extract version, read: %s", str)
 	}
+
+	// In Go 1.21 the time was added as the second line of the VERSION file
+	// so we only want the first line
+	version, _, _ = strings.Cut(version, "\n")
+	version = strings.TrimSpace(version)
+
 	fmt.Println(version)
 }
 

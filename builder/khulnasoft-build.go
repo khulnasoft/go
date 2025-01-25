@@ -20,8 +20,7 @@ type Builder struct {
 func (b *Builder) PrepareWorkdir() error {
 	if err := os.RemoveAll(b.dst); err != nil {
 		return err
-	}
-	if err := os.MkdirAll(b.dst, 0755); err != nil {
+	} else if err := os.MkdirAll(b.dst, 0755); err != nil {
 		return err
 	}
 	return nil
@@ -39,7 +38,7 @@ func (b *Builder) Build() error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = append(os.Environ(),
-		"GOROOT_FINAL=/khulnasoft",
+		"GOROOT_FINAL=/khulnsoft",
 		"GOARCH="+b.GOARCH,
 		"GOOS="+b.GOOS,
 	)
@@ -131,9 +130,9 @@ func all(src string, all ...string) []string {
 	return res
 }
 
-func BuildKhulnasoftGo(goos, goarch, root, dst string) error {
+func BuildKhulnsoftGo(goos, goarch, root, dst string) error {
 	if _, err := os.Stat(filepath.Join(root, "go", "src", "make.bash")); err != nil {
-		return fmt.Errorf("unexpected location for build script, expected in khulnasoft-go root")
+		return fmt.Errorf("unexpected location for build script, expected in khulnsoft-go root")
 	}
 
 	if err := os.Chdir(root); err != nil {
@@ -153,7 +152,7 @@ func BuildKhulnasoftGo(goos, goarch, root, dst string) error {
 		GOOS:       goos,
 		GOARCH:     goarch,
 		goroot:     join(root, "go"),
-		dst:        join(dst, goos+"_"+goarch, "khulnasoft-go"),
+		dst:        join(dst, goos+"_"+goarch, "khulnsoft-go"),
 		crossBuild: runtime.GOOS != goos || runtime.GOARCH != goarch,
 	}
 

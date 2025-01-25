@@ -1,5 +1,5 @@
-//go:build khulnasoft
-// +build khulnasoft
+//go:build khulnsoft
+// +build khulnsoft
 
 package http
 
@@ -8,10 +8,8 @@ import (
 	_ "unsafe"
 )
 
-// khulnasoftBeginRoundTrip is called by net/http when a RoundTrip begins.
-//go:linkname khulnasoftBeginRoundTrip net/http.khulnasoftBeginRoundTrip
-func khulnasoftBeginRoundTrip(req *Request) (context.Context, error)
+// khulnsoftBeginRoundTrip is called by net/http when a RoundTrip begins.
+func khulnsoftBeginRoundTrip(req *Request) (context.Context, error)
 
-// khulnasoftFinishRoundTrip is called by net/http when a RoundTrip completes.
-//go:linkname khulnasoftFinishRoundTrip net/http.khulnasoftFinishRoundTrip
-func khulnasoftFinishRoundTrip(req *Request, resp *Response, err error)
+// khulnsoftFinishRoundTrip is called by net/http when a RoundTrip completes.
+func khulnsoftFinishRoundTrip(req *Request, resp *Response, err error)

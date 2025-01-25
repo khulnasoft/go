@@ -4,26 +4,26 @@ import (
 	"unsafe"
 )
 
-// setKhulnasoftG sets the khulnasoftG value on the running g to the given value.
-func setKhulnasoftG(val unsafe.Pointer) {
+// setKhulnsoftG sets the khulnsoftG value on the running g to the given value.
+func setKhulnsoftG(val unsafe.Pointer) {
 	g := getg().m.curg
-	g.khulnasoft = val
+	g.khulnsoft = val
 }
 
-// getKhulnasoftG gets the khulnasoftG value from the running g.
-func getKhulnasoftG() unsafe.Pointer {
-	return getg().m.curg.khulnasoft
+// getKhulnsoftG gets the khulnsoftG value from the running g.
+func getKhulnsoftG() unsafe.Pointer {
+	return getg().m.curg.khulnsoft
 }
 
-// khulnasoftCallers is like runtime.Callers but also returns the offset
+// khulnsoftCallers is like runtime.Callers but also returns the offset
 // of the text segment to make the PCs ASLR-independent.
-func khulnasoftCallers(skip int, pc []uintptr) (n int, off uintptr) {
+func khulnsoftCallers(skip int, pc []uintptr) (n int, off uintptr) {
 	n = Callers(skip+1, pc)
 	return n, firstmoduledata.text
 }
 
-// To allow Khulnasoft to use go:linkname:
+// To allow Khulnsoft to use go:linkname:
 
-//go:linkname getKhulnasoftG
-//go:linkname setKhulnasoftG
-//go:linkname khulnasoftCallers
+//go:linkname getKhulnsoftG
+//go:linkname setKhulnsoftG
+//go:linkname khulnsoftCallers

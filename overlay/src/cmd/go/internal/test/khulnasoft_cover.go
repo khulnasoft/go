@@ -18,7 +18,7 @@ import (
 
 // copyCoverageProfile copies the coverage profile report into
 // the output file while restoring the original filenames from
-// any overlays that were applied by Khulnasoft.
+// any overlays that where applied by Khulnsoft.
 //
 // Normally the coverage profile is copied using in [mergeCoverProfile] using:
 //
@@ -31,9 +31,9 @@ import (
 //
 // It restores the original file names from the overlay file.
 func copyCoverageProfile(from io.Reader, to io.Writer) (err error) {
-	khulnasoftOnce.Do(func() { err = initKhulnasoftReverseMap() })
+	khulnsoftOnce.Do(func() { err = initKhulnsoftReverseMap() })
 	if err != nil {
-		println("khulnasoft: error initializing overlay reverse map: " + err.Error())
+		println("khulnsoft: error initializing overlay reverse map: " + err.Error())
 		return err
 	}
 
@@ -51,7 +51,7 @@ func copyCoverageProfile(from io.Reader, to io.Writer) (err error) {
 		// pointing back to the original file.
 		filename, rest, found := strings.Cut(line, ":")
 		if found {
-			if mappedFilename, ok := khulnasoftOverlayReverseMap[filename]; ok {
+			if mappedFilename, ok := khulnsoftOverlayReverseMap[filename]; ok {
 				line = mappedFilename + ":" + rest
 			}
 		}
@@ -67,18 +67,18 @@ func copyCoverageProfile(from io.Reader, to io.Writer) (err error) {
 }
 
 var (
-	khulnasoftOverlayReverseMap map[string]string
-	khulnasoftOnce              sync.Once
+	khulnsoftOverlayReverseMap map[string]string
+	khulnsoftOnce              sync.Once
 )
 
-// initKhulnasoftReverseMap initializes the khulnasoftOverlayReverseMap
+// initKhulnsoftReverseMap initializes the khulnsoftOverlayReverseMap
 // which is a mapping of "[pkg]/[overlay_file].go" -> "[pkg]/[original_file].go"
 //
 // It does this by:
 //  1. Reading the overlay file (fsys.OverlayFile)
 //  2. Working out the packages that we're overlaying based on their file paths
 //  3. Building a map of "[pkg]/[overlay_file].go" -> "[pkg]/[original_file].go"
-func initKhulnasoftReverseMap() error {
+func initKhulnsoftReverseMap() error {
 	// 1) First read the overlay file
 	var overlayJSON fsys.OverlayJSON
 	{ // This block is mostly copied from: cmd/go/internal/fsys/fsys.go Init
@@ -147,13 +147,13 @@ func initKhulnasoftReverseMap() error {
 	}
 
 	// 3) Now build the reverse map
-	khulnasoftOverlayReverseMap = make(map[string]string)
+	khulnsoftOverlayReverseMap = make(map[string]string)
 	for basePath, overlayPath := range overlayJSON.Replace {
 		// Find the package for the original file
 		basePath = canonicalize(basePath)
 		pkg, found := pkgs[filepath.Dir(basePath)]
 		if !found {
-			// Some of Khulnasoft's internals are not in the go list, so we ignore them
+			// Some of Khulnsoft's internals are not in the go list, so we ignore them
 			continue
 		}
 
@@ -162,7 +162,7 @@ func initKhulnasoftReverseMap() error {
 		reportedFile := filepath.Join(pkg.ImportPath, filepath.Base(canonicalize(overlayPath)))
 		originalFile := filepath.Join(pkg.ImportPath, filepath.Base(basePath))
 		if reportedFile != originalFile {
-			khulnasoftOverlayReverseMap[reportedFile] = originalFile
+			khulnsoftOverlayReverseMap[reportedFile] = originalFile
 		}
 	}
 
