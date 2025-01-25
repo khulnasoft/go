@@ -64,7 +64,7 @@ jobs:
         run: tar -czvf ${{ steps.khulnasoft_go_version.outputs.version }}-${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz -C dist/${{ matrix.goos }}_${{ matrix.goarch }} .
 
       - name: 'Upload build artifact'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.khulnasoft_go_version.outputs.version }}-${{ matrix.goos }}_${{ matrix.goarch }}
           path: ${{ steps.khulnasoft_go_version.outputs.version }}-${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz
