@@ -3,8 +3,6 @@ package test
 import (
 	"bufio"
 	"bytes"
-	"cmd/go/internal/base"
-	"cmd/go/internal/fsys"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -18,52 +16,41 @@ import (
 
 // copyCoverageProfile copies the coverage profile report into
 // the output file while restoring the original filenames from
-// any overlays that where applied by Khulnsoft.
+// any overlays that were applied by Khulnsoft.
 //
 // Normally the coverage profile is copied using in [mergeCoverProfile] using:
-//
-//	_, err = io.Copy(coverMerge.f, r)
-//
-// However, this doesn't work with overlays because the coverage
-// profile contains the overlay file names, so we replace that line with::
-//
-//	err = copyCoverageProfile(r, coverMerge.f)
-//
-// It restores the original file names from the overlay file.
-func copyCoverageProfile(from io.Reader, to io.Writer) (err error) {
-	khulnsoftOnce.Do(func() { err = initKhulnsoftReverseMap() })
-	if err != nil {
-		println("khulnsoft: error initializing overlay reverse map: " + err.Error())
-		return err
-	}
+func copyCoverageProfile(src, dst string, overlays map[string]string) error {
+    srcFile, err := os.Open(src)
+    if err != nil {
+        return fmt.Errorf("failed to open source file: %w", err)
+    }
+    defer srcFile.Close()
 
-	b, err := io.ReadAll(from)
-	if err != nil {
-		return err
-	}
+    dstFile, err := os.Create(dst)
+    if err != nil {
+        return fmt.Errorf("failed to create destination file: %w", err)
+    }
+    defer dstFile.Close()
 
-	// Read the coverage profile line by line.
-	scanner := bufio.NewScanner(bytes.NewReader(b))
-	for scanner.Scan() {
-		line := scanner.Text() + "\n"
+    scanner := bufio.NewScanner(srcFile)
+    writer := bufio.NewWriter(dstFile)
+    defer writer.Flush()
 
-		// Update the line if we have the filename is an overlay file
-		// pointing back to the original file.
-		filename, rest, found := strings.Cut(line, ":")
-		if found {
-			if mappedFilename, ok := khulnsoftOverlayReverseMap[filename]; ok {
-				line = mappedFilename + ":" + rest
-			}
-		}
+    for scanner.Scan() {
+        line := scanner.Text()
+        for orig, overlay := range overlays {
+            line = strings.ReplaceAll(line, overlay, orig)
+        }
+        if _, err := writer.WriteString(line + "\n"); err != nil {
+            return fmt.Errorf("failed to write to destination file: %w", err)
+        }
+    }
 
-		// Write the line to the output file.
-		_, err := to.Write([]byte(line))
-		if err != nil {
-			return err
-		}
-	}
+    if err := scanner.Err(); err != nil {
+        return fmt.Errorf("error reading source file: %w", err)
+    }
 
-	return nil
+    return nil
 }
 
 var (

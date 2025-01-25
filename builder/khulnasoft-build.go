@@ -18,9 +18,20 @@ type Builder struct {
 }
 
 func (b *Builder) PrepareWorkdir() error {
+	expectedDir := "khulnasoft-go"
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to get current directory: %w", err)
+	}
+
+	if filepath.Base(currentDir) != expectedDir {
+		return fmt.Errorf("unexpected location for build script, expected in %s root", expectedDir)
+	}
+
 	if err := os.RemoveAll(b.dst); err != nil {
 		return err
-	} else if err := os.MkdirAll(b.dst, 0755); err != nil {
+	}
+	if err := os.MkdirAll(b.dst, 0755); err != nil {
 		return err
 	}
 	return nil
