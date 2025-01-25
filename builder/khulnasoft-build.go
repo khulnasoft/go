@@ -20,7 +20,8 @@ type Builder struct {
 func (b *Builder) PrepareWorkdir() error {
 	if err := os.RemoveAll(b.dst); err != nil {
 		return err
-	} else if err := os.MkdirAll(b.dst, 0755); err != nil {
+	}
+	if err := os.MkdirAll(b.dst, 0755); err != nil {
 		return err
 	}
 	return nil

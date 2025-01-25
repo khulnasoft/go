@@ -18,7 +18,7 @@ import (
 
 // copyCoverageProfile copies the coverage profile report into
 // the output file while restoring the original filenames from
-// any overlays that where applied by Khulnasoft.
+// any overlays that were applied by Khulnasoft.
 //
 // Normally the coverage profile is copied using in [mergeCoverProfile] using:
 //

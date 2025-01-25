@@ -9,11 +9,13 @@ import "unsafe"
 // It is defined here as a no-op for Khulnasoft binaries that were built
 // without linking in the Khulnasoft runtime to avoid strange build errors.
 func startKhulnasoftG(src unsafe.Pointer) unsafe.Pointer {
-	return nil
+    return nil
 }
 
 // exitKhulnasoftG marks a goroutine as having exited.
 // It is defined here as a no-op for Khulnasoft binaries that were built
 // without linking in the Khulnasoft runtime to avoid strange build errors.
 func exitKhulnasoftG(src unsafe.Pointer) {
+    // Ensure the function signature matches the one in khulnasoft_app.go
+    _ = src
 }

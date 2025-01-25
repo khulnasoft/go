@@ -2,6 +2,27 @@
 
 # NOTE: This script creates a fresh version of a Khulnasoft patched Go runtime, however we are aiming to create
 #       reproducible builds, as such all copies and file writes are given fixed timestamps (rather than the system time
+#       when this script was run). This allows the Git commit at the end of the process to have a deterministic hash,
+#       thus when we build the Go binary it will produce an identical binary.
+
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+_(){ eval "$@" 2>&1 | sed "s/^/    /" ; return "${PIPESTATUS[0]}" ;}
+
+[ "$#" -eq 1 ] || die "Usage: $0 [go release]"
+
+# Patches the Go runtime with Khulnasoft tracing code.
+
+# Examples:
+# ========
+# A Go release: $0 1.17
+# Nightly release: $0 master#!/usr/bin/env bash
+
+# NOTE: This script creates a fresh version of a Khulnasoft patched Go runtime, however we are aiming to create
+#       reproducible builds, as such all copies and file writes are given fixed timestamps (rather than the system time
 #       when thie script was run). This allows the Git commit at the end of the process to have a deterministic hash,
 #       thus when we build the Go binary it will produce an identical binary.
 

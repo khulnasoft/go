@@ -46,10 +46,12 @@ func readBuiltVersion() {
 		str = readfile("go/VERSION")
 		// Then we repeat the replace we do within the src/cmd/dist/build.go
 		str = strings.Replace(str, "go1.", "khulnasoft-go1.", 1)
-	} else {
+	} else if isfile("go/VERSION.cache") {
 		// Otherwise we read the cache file which would be created by the build process
 		// if there was no VERSION file present
 		str = readfile("go/VERSION.cache")
+	} else {
+		log.Fatalf("Neither VERSION nor VERSION.cache file found")
 	}
 
 	// With our patches there must always be an `khulnasoft-go1.xx` version in this string
@@ -60,14 +62,8 @@ func readBuiltVersion() {
 	}
 	version := re.FindString(str)
 	if version == "" {
-		log.Fatalf("Unable to extract version, read: %s", str)
+		log.Fatalf("Unable to find version string in: %s", str)
 	}
-
-	// In Go 1.21 the time was added as the second line of the VERSION file
-	// so we only want the first line
-	version, _, _ = strings.Cut(version, "\n")
-	version = strings.TrimSpace(version)
-
 	fmt.Println(version)
 }
 

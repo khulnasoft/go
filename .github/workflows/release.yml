@@ -68,28 +68,31 @@ jobs:
         with:
           name: ${{ steps.khulnasoft_go_version.outputs.version }}-${{ matrix.goos }}_${{ matrix.goarch }}
           path: ${{ steps.khulnasoft_go_version.outputs.version }}-${{ matrix.goos }}_${{ matrix.goarch }}.tar.gz
+
   release:
     runs-on: ubuntu-20.04
     needs: build
     steps:
       - name: 'Download artifacts from build steps'
         uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.build.outputs.built_version }}-${{ matrix.goos }}_${{ matrix.goarch }}
 
       - name: 'Convert windows artifact to zip'
+        if: ${{ matrix.goos == 'windows' }}
         run: |
-          cd ${{needs.build.outputs.built_version}}-windows_amd64
-          tar -xzf ${{needs.build.outputs.built_version}}-windows_amd64.tar.gz
-          zip -r ${{needs.build.outputs.built_version}}-windows_amd64.zip khulnasoft-go
+          tar -xzf ${{ needs.build.outputs.built_version }}-windows_amd64.tar.gz
+          zip -r ${{ needs.build.outputs.built_version }}-windows_amd64.zip khulnasoft-go
 
       - name: 'Move, rename and create checksums for the artifacts'
         run: |
           mkdir output
-          mv ${{needs.build.outputs.built_version}}-linux_amd64/${{needs.build.outputs.built_version}}-linux_amd64.tar.gz output/linux_x86-64.tar.gz
-          mv ${{needs.build.outputs.built_version}}-linux_arm64/${{needs.build.outputs.built_version}}-linux_arm64.tar.gz output/linux_arm64.tar.gz
-          mv ${{needs.build.outputs.built_version}}-darwin_amd64/${{needs.build.outputs.built_version}}-darwin_amd64.tar.gz output/macos_x86-64.tar.gz
-          mv ${{needs.build.outputs.built_version}}-darwin_arm64/${{needs.build.outputs.built_version}}-darwin_arm64.tar.gz output/macos_arm64.tar.gz
-          mv ${{needs.build.outputs.built_version}}-windows_amd64/${{needs.build.outputs.built_version}}-windows_amd64.tar.gz output/windows_x86-64.tar.gz
-          mv ${{needs.build.outputs.built_version}}-windows_amd64/${{needs.build.outputs.built_version}}-windows_amd64.zip output/windows_x86-64.zip
+          mv ${{ needs.build.outputs.built_version }}-linux_amd64.tar.gz output/linux_x86-64.tar.gz
+          mv ${{ needs.build.outputs.built_version }}-linux_arm64.tar.gz output/linux_arm64.tar.gz
+          mv ${{ needs.build.outputs.built_version }}-darwin_amd64.tar.gz output/macos_x86-64.tar.gz
+          mv ${{ needs.build.outputs.built_version }}-darwin_arm64.tar.gz output/macos_arm64.tar.gz
+          mv ${{ needs.build.outputs.built_version }}-windows_amd64.tar.gz output/windows_x86-64.tar.gz
+          mv ${{ needs.build.outputs.built_version }}-windows_amd64.zip output/windows_x86-64.zip
           cd output
           sha256sum * > checksums.txt
           ls -R .
