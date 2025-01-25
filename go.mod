@@ -1,3 +1,3 @@
-module go.khulnsoft.com/go
+module go.khulnasoft.com/go
 
-go 1.20
+go 1.23.4
